@@ -27,6 +27,7 @@ public:
 	void ShowPickupWidget(bool bShowWidget);
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void Fire(const FVector& HitTarget);
+	void Dropped();
 
 	// Textures for the weapon Crosshairs
 	UPROPERTY(EditAnywhere, Category = Crosshairs)
@@ -81,7 +82,7 @@ private:
 	TSubclassOf<class ACasing> CasingClass;
 
 public:
-	void SetWeaponSate(EWeaponState State);
+	void SetWeaponState(EWeaponState State);
 	FORCEINLINE USphereComponent* GetAreaSphere() const { return AreaSphere; }
 	FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; }
 	FORCEINLINE float GetZoomedFOV() const { return ZoomedFOV; }

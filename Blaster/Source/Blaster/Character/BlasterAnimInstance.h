@@ -60,7 +60,10 @@ private:
 	bool bLocallyControlled;
 
 	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
-	bool bRotateRootBone;
+		bool bRotateRootBone;
+
+	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+		bool bElimned;
 
 	FRotator CharacterRotationLastFrame;
 	FRotator CharacterRotation;
