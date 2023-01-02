@@ -46,8 +46,6 @@ void ABlasterHUD::DrawHUD()
 void ABlasterHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("BeginPlay"));
-	AddCharacterOverlay();
 }
 
 void ABlasterHUD::AddCharacterOverlay()
