@@ -8,7 +8,6 @@
 #include "Blaster/Weapon/WeaponTypes.h"
 #include "Blaster/BlasterTypes/CombatState.h"
 #include "CombatComponent.generated.h"
-#define TRACE_LENGTH 80000
 
 class AWeapon;
 
@@ -27,6 +26,8 @@ public:
 	void Reload();
 	UFUNCTION(BlueprintCallable)
 	void FinishReloading();
+
+	void FireButtonPressed(bool bPressed);
 protected:
 	virtual void BeginPlay() override;
 	void SetAiming(bool bIsAiming);
@@ -35,9 +36,6 @@ protected:
 
 	UFUNCTION()
 		void OnRep_EquippedWeapon();
-
-	void FireButtonPressed(bool bPressed);
-
 	void Fire();
 
 	UFUNCTION(Server, Reliable)
@@ -117,7 +115,15 @@ private:
 	TMap<EWeaponType, int32> CarriedAmmoMap;
 
 	UPROPERTY(EditDefaultsOnly)
-	int32 StartingAmmo = 30;
+		int32 StartingARAmmo = 30;
+	UPROPERTY(EditDefaultsOnly)
+		int32 StartingRocketAmmo = 8;
+	UPROPERTY(EditDefaultsOnly)
+		int32 StartingPistolAmmo = 15;
+	UPROPERTY(EditDefaultsOnly)
+		int32 StartingSMGAmmo = 20;
+	UPROPERTY(EditDefaultsOnly)
+		int32 StartingShotgunAmmo = 20;
 
 	void InitializeCarriedAmmo();
 
