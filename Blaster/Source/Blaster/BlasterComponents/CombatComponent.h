@@ -124,6 +124,10 @@ private:
 		int32 StartingSMGAmmo = 20;
 	UPROPERTY(EditDefaultsOnly)
 		int32 StartingShotgunAmmo = 20;
+	UPROPERTY(EditDefaultsOnly)
+		int32 StartingSniperAmmo = 1;
+	UPROPERTY(EditDefaultsOnly)
+		int32 StartingGrenadeLauncherAmmo = 1;
 
 	void InitializeCarriedAmmo();
 
