@@ -26,6 +26,7 @@ public:
 	void PlayFireMontage(bool bAiming);
 	void PlayReloadMontage();
 	void PlayElimMontage();
+	void PlayThrowGrenadeMontage();
 
 	virtual void OnRep_ReplicatedMovement() override;
 
@@ -57,6 +58,7 @@ protected:
 	void FireButtonPressed();
 	void FireButtonReleased();
 	void PlayHitReactMontage();
+	void GrenadeButtonPressed();
 	UFUNCTION()
 	void ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatorController, AActor* DamageCauser);
 	void UpdateHUDHealth();
@@ -103,6 +105,8 @@ private:
 		UAnimMontage* HitReactMontage;
 	UPROPERTY(EditAnywhere, Category = Combat)
 		UAnimMontage* ElimMontage;
+	UPROPERTY(EditAnywhere, Category = Combat)
+		UAnimMontage* ThrowGrendaeMontage;
 	void HideCameraIfCharacterClose();
 	UPROPERTY(EditAnywhere)
 	float CameraThreshold = 200.f;
@@ -161,6 +165,10 @@ private:
 
 	UPROPERTY()
 	class ABlasterPlayerState* BlasterPlayerState;
+
+	// Grenade
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* AttachedGrenade;
 public:
 	void SetOverlappingWeapon(AWeapon* Weapon);
 	bool IsWeaponEquipped();
@@ -178,4 +186,6 @@ public:
 	ECombatState GetCombatState() const;
 	FORCEINLINE UCombatComponent* GetCombat() const { return Combat; };
 	FORCEINLINE bool GetDisableGameplay() const { return bDisableGameplay; };
+	FORCEINLINE UAnimMontage* GetReloadMontage() const { return ReloadMontage; };
+	FORCEINLINE UStaticMeshComponent* GetAttachedGrenade() const { return AttachedGrenade; };
 };

@@ -28,6 +28,16 @@ public:
 	void FinishReloading();
 
 	void FireButtonPressed(bool bPressed);
+public:
+	UFUNCTION(BlueprintCallable)
+		void ShotgunShellReload();
+	void JumpToShotgunEnd();
+
+	UFUNCTION(BlueprintCallable)
+		void ThrowGrenadeFinished();
+
+	UFUNCTION(BlueprintCallable)
+		void LaunchGrenade();
 protected:
 	virtual void BeginPlay() override;
 	void SetAiming(bool bIsAiming);
@@ -53,6 +63,17 @@ protected:
 
 	int32 AmountToReload();
 
+	void ThrowGrenade();
+	UFUNCTION(Server,Reliable)
+	void ServerThrowGrenade();
+
+	void DropEquippedWeapon();
+	void AttachActorToRightHand(AActor* ActorToAttach);
+	void AttachActorToLeftHand(AActor* ActorToAttach);
+	void UpdateCarriedAmmo();
+	void PlayEquipWeaponSound();
+	void ReloadEmptyWeapon();
+	void ShowAttachedGrenade(bool bShowGrenade);
 private:
 	UPROPERTY()
 	class ABlasterCharacter* Character;
@@ -138,4 +159,5 @@ private:
 	void OnRep_CombatState();
 
 	void UpdateAmmoValues();
+	void UpdateShotgunAmmoValues();
 };
