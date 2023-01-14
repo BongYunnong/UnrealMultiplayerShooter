@@ -16,10 +16,16 @@ class BLASTER_API UCharacterOverlay : public UUserWidget
 	
 public:
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* HealthBar;
+		class UProgressBar* HealthBar;
 
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* HealthText;
+		class UTextBlock* HealthText;
+
+	UPROPERTY(meta = (BindWidget))
+		UProgressBar* ShieldBar;
+
+	UPROPERTY(meta = (BindWidget))
+		UTextBlock* ShieldText;
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ScoreAmount;
@@ -34,5 +40,7 @@ public:
 	UTextBlock* CarriedAmmoAmount;
 
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* MatchCountdownText;
+		UTextBlock* MatchCountdownText;
+	UPROPERTY(meta = (BindWidget))
+		UTextBlock* GrenadeText;
 };

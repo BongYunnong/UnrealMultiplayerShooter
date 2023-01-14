@@ -13,6 +13,7 @@ enum class EWeaponState :uint8
 {
 	EWS_Initial UMETA(Displayname = "Initial State"),
 	EWS_Equipped UMETA(Displayname = "Equipped"),
+	EWS_EquippedSecondary UMETA(Displayname = "EquippedSecondary"),
 	EWS_Dropped UMETA(Displayname = "Dropped"),
 	EWS_MAX UMETA(Displayname = "DefaultMAX"),
 };
@@ -62,8 +63,15 @@ public:
 
 	// Enable or disable custom depth
 	void EnableCustomDepth(bool bEnable);
+
+	bool bDestroyWeapon = false;
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void OnWeaponStateSet();
+	virtual void OnEquipped();
+	virtual void OnDropped();
+	virtual void OnEquippedSecondary();
 
 	UFUNCTION()
 	virtual void OnSphereOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

@@ -23,12 +23,13 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	void EquipWeapon(AWeapon* WeaponToEquip);
+	void SwapWeapon();
 	void Reload();
 	UFUNCTION(BlueprintCallable)
 	void FinishReloading();
 
 	void FireButtonPressed(bool bPressed);
-public:
+
 	UFUNCTION(BlueprintCallable)
 		void ShotgunShellReload();
 	void JumpToShotgunEnd();
@@ -38,6 +39,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void LaunchGrenade();
+	UFUNCTION(Server,Reliable)
+		void ServerLaunchGrenade(const FVector_NetQuantize& Target);
+
+	void PickupAmmo(EWeaponType WeaponType, int32 AmmoAmount);
 protected:
 	virtual void BeginPlay() override;
 	void SetAiming(bool bIsAiming);
@@ -46,6 +51,8 @@ protected:
 
 	UFUNCTION()
 		void OnRep_EquippedWeapon();
+	UFUNCTION()
+		void OnRep_SecondaryWeapon();
 	void Fire();
 
 	UFUNCTION(Server, Reliable)
@@ -67,13 +74,19 @@ protected:
 	UFUNCTION(Server,Reliable)
 	void ServerThrowGrenade();
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AProjectile> GrenadeClass;
+
 	void DropEquippedWeapon();
 	void AttachActorToRightHand(AActor* ActorToAttach);
 	void AttachActorToLeftHand(AActor* ActorToAttach);
+	void AttachActorToBackpack(AActor* ActorToAttach);
 	void UpdateCarriedAmmo();
-	void PlayEquipWeaponSound();
+	void PlayEquipWeaponSound(AWeapon* WeaponToEquip);
 	void ReloadEmptyWeapon();
 	void ShowAttachedGrenade(bool bShowGrenade);
+	void EquipPrimaryWeapon(AWeapon* WeaponToEquip);
+	void EquipSecondaryWeapon(AWeapon* WeaponToEquip);
 private:
 	UPROPERTY()
 	class ABlasterCharacter* Character;
@@ -82,7 +95,9 @@ private:
 	UPROPERTY()
 	class ABlasterHUD* HUD;
 	UPROPERTY(ReplicatedUsing = OnRep_EquippedWeapon)
-	class AWeapon* EquippedWeapon;
+		class AWeapon* EquippedWeapon;
+	UPROPERTY(ReplicatedUsing = OnRep_SecondaryWeapon)
+		class AWeapon* SecondaryWeapon;
 
 	UPROPERTY(Replicated)
 	bool bAiming;
@@ -134,6 +149,8 @@ private:
 	void OnRep_CarriedAmmo();
 
 	TMap<EWeaponType, int32> CarriedAmmoMap;
+	UPROPERTY(EditAnywhere)
+	int32 MaxCarriedAmmo = 500;
 
 	UPROPERTY(EditDefaultsOnly)
 		int32 StartingARAmmo = 30;
@@ -160,4 +177,16 @@ private:
 
 	void UpdateAmmoValues();
 	void UpdateShotgunAmmoValues();
+
+	UFUNCTION()
+	void OnRep_Grenades();
+	UPROPERTY(ReplicatedUsing = OnRep_Grenades)
+	int32 Grenades = 4;
+	UPROPERTY(EditAnywhere)
+	int32 MaxGrenades = 4;
+
+	void UpdateHUDGrenades();
+public:
+	FORCEINLINE int32 GetGrenades() const { return Grenades; }
+	bool ShouldSwapWeapon();
 };
