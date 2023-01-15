@@ -5,6 +5,10 @@
 #include "GameFramework/PlayerController.h"
 #include "CharacterOverlay.h"
 #include "Announcement.h"
+void ABlasterHUD::BeginPlay()
+{
+	Super::BeginPlay();
+}
 void ABlasterHUD::DrawHUD()
 {
 	Super::DrawHUD();
@@ -45,10 +49,6 @@ void ABlasterHUD::DrawHUD()
 }
 
 
-void ABlasterHUD::BeginPlay()
-{
-	Super::BeginPlay();
-}
 
 void ABlasterHUD::AddCharacterOverlay()
 {

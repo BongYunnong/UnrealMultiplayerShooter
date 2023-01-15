@@ -8,6 +8,7 @@
 #include "Blaster/Interfaces/InteractWithCrosshairsInterface.h"
 #include "Components/TimelineComponent.h"
 #include "Blaster/BlasterTypes/CombatState.h"
+#include "Blaster/BlasterTypes/Team.h"
 #include "BlasterCharacter.generated.h"
 
 UCLASS()
@@ -45,6 +46,9 @@ public:
 	void UpdateHUDAmmo();
 	
 	void SpawnDefaultWeapon();
+
+
+	void SetTeamColor(ETeam Team);
 protected:
 	virtual void BeginPlay() override;
 
@@ -67,6 +71,9 @@ protected:
 	void GrenadeButtonPressed();
 	void DropOrDestroyWeapon(AWeapon* Weapon);
 	void DropOrDestroyWeapons();
+	void SetSpawnPoint();
+	void OnPlayerStateInitialized();
+
 	UFUNCTION()
 	void ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatorController, AActor* DamageCauser);
 	// Poll for any relevant classes and initialize our HUD
@@ -169,8 +176,21 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = Elim)
 	UMaterialInstanceDynamic* DynamicDissolveMaterialInstance;
 	// Material instsance set on the Blueprint
-	UPROPERTY(EditAnywhere, Category = Elim)
+	UPROPERTY(VisibleAnywhere, Category = Elim)
 	UMaterialInstance* DissolveMaterialInstance;
+
+	// Team Color
+
+	UPROPERTY(EditAnywhere, Category = Elim)
+		UMaterialInstance* RedDissolveMatInst;
+	UPROPERTY(EditAnywhere, Category = Elim)
+		UMaterialInstance* RedMaterial;
+	UPROPERTY(EditAnywhere, Category = Elim)
+		UMaterialInstance* BlueDissolveMatInst;
+	UPROPERTY(EditAnywhere, Category = Elim)
+		UMaterialInstance* BlueMaterial;
+	UPROPERTY(EditAnywhere, Category = Elim)
+		UMaterialInstance* OriginalMaterial;
 
 	// Elim Bot
 	UPROPERTY(EditAnywhere)
@@ -190,6 +210,9 @@ private:
 	// Default Weapon
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AWeapon> DefaultWeaponClass;
+
+	UPROPERTY()
+		class ABlasterGameMode* BlasterGameMode;
 public:
 	void SetOverlappingWeapon(AWeapon* Weapon);
 	bool IsWeaponEquipped();
@@ -214,4 +237,7 @@ public:
 	FORCEINLINE bool GetDisableGameplay() const { return bDisableGameplay; };
 	FORCEINLINE UAnimMontage* GetReloadMontage() const { return ReloadMontage; };
 	FORCEINLINE UStaticMeshComponent* GetAttachedGrenade() const { return AttachedGrenade; };
+	bool IsHoldingFlag() const;
+	ETeam GetTeam();
+	void SetHoldingTheFlag(bool bHolding);
 };

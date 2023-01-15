@@ -80,4 +80,7 @@ private:
 	bool bCreateSessionOnDestroy{ false };
 	int32 LastNumPublicConnections;
 	FString LastMatchType;
+public:
+	int32 DesiredNumPublicConnections{};
+	FString DesiredMatchType{};
 };
