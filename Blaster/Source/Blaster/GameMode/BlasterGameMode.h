@@ -24,6 +24,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void PlayerEliminated(class ABlasterCharacter* ElimedCharacer, class ABlasterPlayerController* VictimController, ABlasterPlayerController* AttackerController);
 	virtual void RequestRespawn(class ACharacter* ElimnedCharacter, AController* ElimnedController);
+	void PlayerLeftGame(class ABlasterPlayerState* PlayerLeaving);
 	virtual float CalculateDamage(AController* Attacker, AController* Victim, float BaseDamage);
 	UPROPERTY(EditDefaultsOnly)
 		float MatchTime = 120.f;

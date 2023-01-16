@@ -14,6 +14,8 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 public:
+
+
 	void SetHUDHealth(float Health, float MaxHealth);
 	void SetHUDShield(float Shield, float MaxShield);
 	void SetHUDScore(float Score);
@@ -41,6 +43,7 @@ public:
 	void HandleMatchHasStarted(bool bTeamsMatch = false);
 	void HandleCooldown();
 protected:
+	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
 	void SetHUDTime();
 	void PollInit();
@@ -73,6 +76,9 @@ protected:
 	void StopHighPingWarning();
 	void CheckPing(float DeltaTime);
 
+
+	void ShowReturnToMainMenu();
+
 	UPROPERTY(ReplicatedUsing = OnRep_ShowTeamScores)
 	bool bShowTeamScores = false;
 	UFUNCTION()
@@ -85,7 +91,17 @@ private:
 	class ABlasterHUD* BlasterHUD;
 
 	UPROPERTY()
-	class ABlasterGameMode* BlasterGameMode;
+		class ABlasterGameMode* BlasterGameMode;
+
+
+	// Return to Main Menu
+	UPROPERTY(EditAnywhere, Category = HUD)
+	TSubclassOf<class UUserWidget> ReturnToMainMenuWidget;
+
+	UPROPERTY()
+	class UReturnToMainMenu* ReturnToMainMenu;
+
+	bool bReturnToMainMenuOpen = false;
 
 	float LevelStartingTime = 0.f;
 	float MatchTime = 0.f;
