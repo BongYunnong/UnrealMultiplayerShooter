@@ -23,6 +23,9 @@
 #include "Blaster/PlayerState/BlasterPlayerState.h"
 #include "Blaster/Weapon/WeaponTypes.h"
 #include "Blaster/PlayerStart/TeamPlayerStart.h"
+#include "Blaster/GameState/BlasterGameState.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 ABlasterCharacter::ABlasterCharacter()
 {
@@ -164,6 +167,12 @@ void ABlasterCharacter::MulticastElim_Implementation(bool bPlayerLeftGame)
 	{
 		ShowSniperScopeWidget(false);
 	}
+
+	if (CrownComponent)
+	{
+		CrownComponent->DestroyComponent();
+	}
+
 	GetWorldTimerManager().SetTimer(
 		ElimTimer,
 		this,
@@ -192,6 +201,34 @@ void ABlasterCharacter::ServerLeaveGame_Implementation()
 	if (BlasterGameMode && BlasterPlayerState)
 	{
 		BlasterGameMode->PlayerLeftGame(BlasterPlayerState);
+	}
+}
+void ABlasterCharacter::MulticastGainedTheLead_Implementation()
+{
+	if (CrownSystem == nullptr) return;
+	if (CrownComponent == nullptr)
+	{
+		CrownComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(
+			CrownSystem,
+			GetCapsuleComponent(),
+			FName(),
+			GetMesh()->GetComponentLocation() + FVector(0.f, 0.f, 55.f),
+			GetActorRotation(),
+			EAttachLocation::KeepWorldPosition,
+			false
+		);
+	}
+	if (CrownComponent)
+	{
+		CrownComponent->Activate();
+	}
+}
+
+void ABlasterCharacter::MulticastLostTheLead_Implementation()
+{
+	if (CrownComponent)
+	{
+		CrownComponent->DestroyComponent();
 	}
 }
 
@@ -487,6 +524,12 @@ void ABlasterCharacter::PollInit()
 		if (BlasterPlayerState)
 		{
 			OnPlayerStateInitialized();
+
+			ABlasterGameState* BlasterGameState = Cast<ABlasterGameState>(UGameplayStatics::GetGameState(this));
+			if (BlasterGameState && BlasterGameState->TopScoringPlayers.Contains(BlasterPlayerState))
+			{
+				MulticastGainedTheLead();
+			}
 		}
 	}
 }

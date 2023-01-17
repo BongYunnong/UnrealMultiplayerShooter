@@ -23,6 +23,8 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 		AController* OwnerController = OwnerCharacter->Controller;
 		if (OwnerController)
 		{
+			const float DamageToCause = Hit.BoneName.ToString() == FString("head") ? HeadShotDamage : Damage;
+
 			UGameplayStatics::ApplyDamage(OtherActor, Damage, OwnerController, this, UDamageType::StaticClass());
 		}
 	}

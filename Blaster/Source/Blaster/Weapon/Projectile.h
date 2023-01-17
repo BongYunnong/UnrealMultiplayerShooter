@@ -26,7 +26,9 @@ protected:
 	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	UPROPERTY(EditAnywhere)
-	float Damage = 20.0f;
+		float Damage = 20.0f;
+	UPROPERTY(EditAnywhere)
+		float HeadShotDamage = 20.0f;
 
 	UPROPERTY(EditAnywhere)
 		class UParticleSystem* ImpactParticles;

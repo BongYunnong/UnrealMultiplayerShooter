@@ -39,6 +39,12 @@ public:
 	UFUNCTION(Server, Reliable)
 		void ServerLeaveGame();
 	FOnLeftGame OnLeftGame;
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastGainedTheLead();
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastLostTheLead();
+
 	virtual void Destroyed() override;
 	UPROPERTY(Replicated)
 	bool bDisableGameplay = false;
@@ -209,6 +215,11 @@ private:
 
 	UPROPERTY()
 	class ABlasterPlayerState* BlasterPlayerState;
+
+	UPROPERTY(EditAnywhere)
+	class UNiagaraSystem* CrownSystem;
+	UPROPERTY()
+	class UNiagaraComponent* CrownComponent;
 
 	// Grenade
 	UPROPERTY(VisibleAnywhere)

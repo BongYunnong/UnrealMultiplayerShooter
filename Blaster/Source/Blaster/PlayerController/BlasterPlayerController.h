@@ -42,6 +42,8 @@ public:
 	void OnMatchStateSet(FName State, bool bTeamsMatch = false);
 	void HandleMatchHasStarted(bool bTeamsMatch = false);
 	void HandleCooldown();
+
+	void BroadcastElim(APlayerState* Attacker, APlayerState* Victim);
 protected:
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
@@ -76,8 +78,10 @@ protected:
 	void StopHighPingWarning();
 	void CheckPing(float DeltaTime);
 
-
 	void ShowReturnToMainMenu();
+
+	UFUNCTION(Client, Reliable)
+	void ClientElimAnnouncement(APlayerState* Attacker, APlayerState* Victim);
 
 	UPROPERTY(ReplicatedUsing = OnRep_ShowTeamScores)
 	bool bShowTeamScores = false;

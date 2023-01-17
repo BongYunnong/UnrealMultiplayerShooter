@@ -21,6 +21,7 @@ void AShotgun::FireShotgun(const TArray<FVector_NetQuantize>& HitTargets)
 		FTransform SocketTransform = MuzzleFlashSocket->GetSocketTransform(GetWeaponMesh());
 		FVector Start = SocketTransform.GetLocation();
 		TMap<ABlasterCharacter*, uint32> HitMap;
+		TMap<ABlasterCharacter*, uint32> HeadshotHitMap;
 		for (FVector_NetQuantize HitTarget : HitTargets)
 		{
 			FHitResult FireHit;
@@ -29,13 +30,16 @@ void AShotgun::FireShotgun(const TArray<FVector_NetQuantize>& HitTargets)
 			ABlasterCharacter* BlasterCharacter = Cast<ABlasterCharacter>(FireHit.GetActor());
 			if (BlasterCharacter)
 			{
-				if (HitMap.Contains(BlasterCharacter))
+				const bool bHeadShot = FireHit.BoneName.ToString() == FString("head");
+				if (bHeadShot)
 				{
-					HitMap[BlasterCharacter]++;
+					if (HeadshotHitMap.Contains(BlasterCharacter)) HeadshotHitMap[BlasterCharacter]++;
+					else HeadshotHitMap.Emplace(BlasterCharacter, 1);
 				}
 				else
 				{
-					HitMap.Emplace(BlasterCharacter, 1);
+					if (HitMap.Contains(BlasterCharacter)) HitMap[BlasterCharacter]++;
+					else HitMap.Emplace(BlasterCharacter, 1);
 				}
 			}
 			if (ImpactParticles)
@@ -58,14 +62,32 @@ void AShotgun::FireShotgun(const TArray<FVector_NetQuantize>& HitTargets)
 				);
 			}
 		}
-
+		TArray< ABlasterCharacter*> HitCharacters;
+		TMap<ABlasterCharacter*, float> DamageMap;
 		for (auto HitPair : HitMap)
 		{
-			if (HitPair.Key && HasAuthority() && InstigatorController)
+			if (HitPair.Key)
+			{
+				DamageMap.Emplace(HitPair.Key, HitPair.Value * Damage);
+				HitCharacters.AddUnique(HitPair.Key);
+			}
+		}
+		for (auto HeadshotHitPair : HeadshotHitMap)
+		{
+			if (HeadshotHitPair.Key)
+			{
+				if (DamageMap.Contains(HeadshotHitPair.Key)) DamageMap[HeadshotHitPair.Key]+=HeadshotHitPair.Value*HeadShotDamage;
+				else DamageMap.Emplace(HeadshotHitPair.Key, HeadshotHitPair.Value * HeadShotDamage);
+				HitCharacters.AddUnique(HeadshotHitPair.Key);
+			}
+		}
+		for (auto DamagePair : DamageMap)
+		{
+			if (DamagePair.Key && InstigatorController)
 			{
 				UGameplayStatics::ApplyDamage(
-					HitPair.Key,
-					Damage * HitPair.Value,
+					DamagePair.Key,
+					DamagePair.Value,
 					InstigatorController,
 					this,
 					UDamageType::StaticClass()

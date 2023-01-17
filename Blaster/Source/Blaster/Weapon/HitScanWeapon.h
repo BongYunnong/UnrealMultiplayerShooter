@@ -21,8 +21,6 @@ protected:
 		class UParticleSystem* ImpactParticles;
 	UPROPERTY(EditAnywhere)
 		USoundCue* HitSound;
-	UPROPERTY(EditAnywhere)
-		float Damage = 20.f;
 private:
 
 	UPROPERTY(EditAnywhere)
